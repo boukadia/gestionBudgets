@@ -1,0 +1,37 @@
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
+
+const Transaction = sequelize.define("Transaction", {
+  type: {
+    type: DataTypes.ENUM("income","expense"),
+    allowNull: false
+  },
+  amount: {
+    type: DataTypes.FLOAT,
+    allowNull: false
+  },
+  category: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  date: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  description: {
+    type: DataTypes.STRING
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'users',
+      key: 'id'
+    }
+  }
+}, {
+  tableName: "transactions",
+  timestamps: true
+});
+
+// Associations will be set up in index.js
+module.exports = Transaction;
