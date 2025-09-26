@@ -4,7 +4,6 @@ const Transaction = require("./Transaction");
 const Budget = require("./Budget");
 const SavingGoal = require("./SavingGoal");
 
-// Set up associations with explicit foreign keys
 User.hasMany(Transaction, { foreignKey: 'userId' });
 Transaction.belongsTo(User, { foreignKey: 'userId' });
 
