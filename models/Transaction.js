@@ -6,7 +6,7 @@ const Transaction = sequelize.define("Transaction", {
     type: DataTypes.ENUM("income","expense"),
     allowNull: false
   },
-  amount: {
+  montant: {
     type: DataTypes.FLOAT,
     allowNull: false
   },
@@ -23,7 +23,16 @@ const Transaction = sequelize.define("Transaction", {
     references: {
       model: 'users',
       key: 'id'
-    }
+    },
+    allowNull: false
+  },
+  categoryId: {
+    type: DataTypes.INTEGER,
+    references: { 
+      model: 'categories',
+      key: 'id'
+    },
+    allowNull: false
   }
 }, {
   tableName: "transactions",
