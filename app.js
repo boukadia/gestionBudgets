@@ -5,8 +5,12 @@ const { sequelize } = require("./models");
 const path = require("path");
 const userRoutes = require("./routes/userRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
+const methodOverride=require('method-override')
+
 
 const app = express();
+app.use(methodOverride('_method'));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +37,6 @@ sequelize.authenticate()
   .then(() => console.log("Database connected successfully!"))
   .catch(err => console.error("DB error:", err));
 
-// Changed from alter:true to prevent creating new indexes on each startup
 sequelize.sync() 
   .then(() => console.log("All tables created/updated!"))
   .catch(err => console.error(err));

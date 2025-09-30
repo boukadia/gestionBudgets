@@ -54,3 +54,27 @@ exports.editTransaction= async(req,res)=>{
 
 
 // module.exports = transactionController;
+exports.updateTransaction=async(req,res)=>{
+  try {
+    const transactionId = req.params.id;
+    await Transaction.update(req.body,{where:{id:transactionId}
+    
+    })
+      res.redirect('/transactions')
+
+  } catch (error) {
+    res.status(500).send("Error updating transaction: " + error.message);
+  }
+  
+}
+exports.deleteTransaction=async(req,res)=>{
+  try {
+    const transactionId = req.params.id;
+    await Transaction.destroy({where:{id:transactionId}
+    })
+    res.redirect('/transactions')
+
+  } catch (error) {
+    res.status(500).send("Error deleting transaction: " + error.message);
+  }
+}
