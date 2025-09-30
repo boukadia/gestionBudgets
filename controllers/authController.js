@@ -82,6 +82,7 @@ exports.registerUser = async (req, res) => {
 
 exports.dashboard = async (req, res) => {
   const categories = await Category.findAll();
+  const transactions = await Transaction.findAll({order: [['createdAt', 'DESC']],include:[Category]});
   
   if (!req.session.userId) {
     res.redirect("/users/login");
@@ -93,7 +94,8 @@ exports.dashboard = async (req, res) => {
       name: req.session.userName,
       email: req.session.userEmail
     },
-    categories: categories
+    categories: categories,
+    transactions: transactions
   });
   }
   
