@@ -16,6 +16,7 @@
         .btn-primary { background: linear-gradient(45deg, #667eea, #764ba2); border: none; }
         .budget-card { transition: transform 0.3s; }
         .budget-card:hover { transform: translateY(-5px); }
+        .card-body{max-height: 260px;min-height: 200px;}
     </style>
 </head>
 <body>
@@ -69,7 +70,7 @@
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <form method="POST" action="/budgets/<%= budget.id %>?_method=DELETE" class="d-inline">
+                                                    <form method="POST" action="/budgets/delete/<%= budget.id %>?_method=DELETE" class="d-inline">
                                                         <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce budget?')">
                                                             <i class="fas fa-trash me-2"></i>Supprimer
                                                         </button>

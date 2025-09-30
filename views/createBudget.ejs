@@ -50,19 +50,14 @@
                                 <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Informations du Budget</h5>
                             </div>
                             <div class="card-body">
-                                <form method="POST" action="/budgets">
+                                <form method="POST" action="/budgets/create">
                                     <div class="mb-3">
                                         <label for="category" class="form-label">Catégorie</label>
                                         <select name="category" id="category" class="form-select" required>
                                             <option value="">Choisir une catégorie</option>
-                                            <option value="Alimentation">Alimentation</option>
-                                            <option value="Transport">Transport</option>
-                                            <option value="Logement">Logement</option>
-                                            <option value="Santé">Santé</option>
-                                            <option value="Loisirs">Loisirs</option>
-                                            <option value="Vêtements">Vêtements</option>
-                                            <option value="Éducation">Éducation</option>
-                                            <option value="Autres">Autres</option>
+                                            <% categories.forEach(category => { %>
+                                            <option value="<%= category.id %>"><%= category.name%></option>
+                                           <% })%>
                                         </select>
                                     </div>
 
