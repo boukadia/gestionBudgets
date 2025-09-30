@@ -164,6 +164,7 @@
                           data-montant="<%= transaction.montant %>"
                           data-category-id="<%= transaction.categoryId %>"
                           data-category="<%= transaction.Category.name %>"
+                          data-date="<%=transaction.date%>"
                           data-bs-toggle="modal"
                           data-bs-target="#addTransactionModal"
                           style="display: inline"
@@ -277,10 +278,10 @@
             const montant = form.dataset.montant;
             const categoryId = form.dataset.categoryId;
             const category = form.dataset.category;
-            //   const date = form.dataset.date;
+              const date = form.dataset.date;
             const id = form.dataset.id;
 
-            console.log(type, description, category, montant, categoryId);
+            console.log(type, description, category, montant, categoryId,date);
 
             const modal = document.getElementById("addTransactionModal");
 
@@ -288,6 +289,7 @@
             modal.querySelector('input[name="description"]').value =description;
             modal.querySelector('input[name="montant"]').value = montant;
             modal.querySelector('select[name="categoryId"]').value = categoryId;
+            modal.querySelector('input[name="date"]').value=date;
             const formm = modal.querySelector('form');
 
             formm.action = `/transactions/edit/${id}?_method=PUT`;
