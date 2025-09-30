@@ -22,5 +22,6 @@ module.exports = {
     User,
     Transaction,
     Budget,
-    SavingGoal
+    SavingGoal,
+    Category,
 };

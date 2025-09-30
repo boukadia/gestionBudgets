@@ -3,7 +3,7 @@ const sequelize = require("../config/database");
 
 const Transaction = sequelize.define("Transaction", {
   type: {
-    type: DataTypes.ENUM("income","expense"),
+    type: DataTypes.ENUM("revenu","depense"),
     allowNull: false
   },
   montant: {

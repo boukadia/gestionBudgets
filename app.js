@@ -4,6 +4,7 @@ const session = require('express-session');
 const { sequelize } = require("./models");
 const path = require("path");
 const userRoutes = require("./routes/userRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 
 const app = express();
 
@@ -15,16 +16,18 @@ app.set("views", path.join(__dirname, "views"));
 
 // Configure session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-default-secret-key', 
+  secret: process.env.SESSION_SECRET || 'your-default-secret-key', // Always use env variable in production
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: process.env.NODE_ENV === 'production', 
-    maxAge: 24 * 60 * 60 * 1000 
+    secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
 app.use("/users", userRoutes);
+app.use('/transactions', transactionRoutes);
+
 
 sequelize.authenticate()
   .then(() => console.log("Database connected successfully!"))

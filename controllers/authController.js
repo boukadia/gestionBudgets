@@ -1,5 +1,7 @@
 const session = require("express-session");
 const { User } = require("../models");
+const {   Transaction } = require("../models");
+const { Category } = require("../models");  
 // const express = require('express');
 const bcrypt = require("bcrypt"); 
 exports.getUsers = async (req, res) => {
@@ -79,6 +81,8 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.dashboard = async (req, res) => {
+  const categories = await Category.findAll();
+  
   if (!req.session.userId) {
     res.redirect("/users/login");
     
@@ -88,7 +92,8 @@ exports.dashboard = async (req, res) => {
     user: {
       name: req.session.userName,
       email: req.session.userEmail
-    }
+    },
+    categories: categories
   });
   }
   
