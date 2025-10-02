@@ -2,7 +2,8 @@
 const session = require("express-session");
 const {User}=require('../models')
 const {Category}=require('../models')
-const {Transaction}=require('../models')
+const {Transaction}=require('../models');
+const { where } = require("sequelize");
 exports.getTransactions= async (req,res) =>{
   
   try {
@@ -23,11 +24,26 @@ exports.getTransactions= async (req,res) =>{
 }
 exports.createTransaction= async(req,res)=>{
  
-    
 
   try {
-    // const solde=
+  const category=await Category.findOne({where:{id:req.body.categoryId}})
+    
  const userId=req.session.userId;
+  if (!userId) {
+      return res.status(401).send('Unauthorized');
+    }
+    if (req.body.type==='revenu' ){ 
+      await User.increment({ solde: req.body.montant }, { where: { id: userId } });
+    }
+    else  {  
+      const user = await User.findOne({where:{id:userId}});
+      if(user.solde < req.body.montant){
+        return res.redirect(`/transactions?error=solde_insuffisant&solde=${user.solde}`);
+      }
+
+      await User.decrement({ solde: req.body.montant }, { where: { id: userId } });
+    }
+    
   const {montant,date,description,categoryId,type}=req.body;
     await Transaction.create(
       {
@@ -70,10 +86,25 @@ exports.updateTransaction=async(req,res)=>{
 }
 exports.deleteTransaction=async(req,res)=>{
   try {
+    const user =await User.findOne({where:{id:req.session.userId}})
+    let solde=user.solde;
     const transactionId = req.params.id;
+    const transaction =await Transaction.findOne({where:{id:req.params.id}})
+if (transaction.type==="depense") {
+    await User.increment({solde:transaction.montant},{where:{id:req.session.userId}})
     await Transaction.destroy({where:{id:transactionId}
     })
     res.redirect('/transactions')
+} else {
+  
+  solde-=transaction.montant;
+  await user.update({solde})
+  
+    await Transaction.destroy({where:{id:transactionId}})
+    res.redirect("/transactions")
+
+}    
+   
 
   } catch (error) {
     res.status(500).send("Error deleting transaction: " + error.message);

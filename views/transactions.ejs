@@ -286,5 +286,28 @@
         });
       });
     </script>
+
+    <!-- Script pour l'alerte de solde insuffisant -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      // Récupérer les paramètres de l'URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      const solde = urlParams.get('solde');
+      
+      
+      // Afficher l'alerte si les paramètres sont présents
+      if (error === 'solde_insuffisant' && solde) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Solde insuffisant!',
+          text: `Votre solde actuel est de ${parseFloat(solde).toLocaleString()} MAD`,
+          confirmButtonColor: '#667eea'
+        });
+        
+        // Nettoyer l'URL sans recharger la page
+        window.history.replaceState({}, document.title, "/transactions");
+      }
+    </script>
   </body>
 </html>
