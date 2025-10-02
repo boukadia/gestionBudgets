@@ -74,9 +74,25 @@ exports.editTransaction= async(req,res)=>{
 exports.updateTransaction=async(req,res)=>{
   try {
     const transactionId = req.params.id;
-    await Transaction.update(req.body,{where:{id:transactionId}
+    const transaction =await Transaction.findOne({where:{id:req.params.id}})
+    const user=await User.findOne({where:{id:req.session.userId}})
+    if (transaction.type==="depense") {
+      user.update({solde:user.solde+transaction.montant}) //travail avec const user
+
+      await Transaction.update(req.body,{where:{id:transactionId}
     
     })
+    user.update({solde:user.solde-req.body.montant}) //travail avec const user
+    } else {
+      user.update({solde:user.solde-transaction.montant}) //travail avec const user
+
+      await Transaction.update(req.body,{where:{id:transactionId}
+    
+    })
+    user.update({solde:user.solde+Number(req.body.montant)}) //travail avec const user
+    }
+    
+    
       res.redirect('/transactions')
 
   } catch (error) {
@@ -91,14 +107,14 @@ exports.deleteTransaction=async(req,res)=>{
     const transactionId = req.params.id;
     const transaction =await Transaction.findOne({where:{id:req.params.id}})
 if (transaction.type==="depense") {
-    await User.increment({solde:transaction.montant},{where:{id:req.session.userId}})
+    await User.increment({solde:transaction.montant},{where:{id:req.session.userId}}) //travail avec le model direct (solde/usserId)
     await Transaction.destroy({where:{id:transactionId}
     })
     res.redirect('/transactions')
 } else {
   
   solde-=transaction.montant;
-  await user.update({solde})
+  await user.update({solde}) //travail avec const user
   
     await Transaction.destroy({where:{id:transactionId}})
     res.redirect("/transactions")
