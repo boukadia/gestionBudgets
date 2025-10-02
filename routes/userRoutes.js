@@ -10,5 +10,6 @@ router.post("/register", authController.registerUser);
 router.get("/login", authController.loginForm);
 router.post("/login", authController.loginUser);
 router.get("/dashboard", authController.dashboard);
+router.get("/logout",authController.logOut)
 
 module.exports = router;

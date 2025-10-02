@@ -101,3 +101,8 @@ exports.dashboard = async (req, res) => {
   
 
 }
+
+exports.logOut=async(req,res)=>{
+  await req.session.destroy();
+  res.redirect("/users/login")
+}

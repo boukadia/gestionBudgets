@@ -6,6 +6,7 @@ const path = require("path");
 const userRoutes = require("./routes/userRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
+const categoryRoutes=require("./routes/categoryRoutes")
 const methodOverride=require('method-override')
 
 
@@ -33,6 +34,7 @@ app.use(session({
 app.use("/users", userRoutes);
 app.use('/transactions', transactionRoutes);
 app.use('/budgets', budgetRoutes);
+app.use('/categories',categoryRoutes);
 
 
 sequelize.authenticate()

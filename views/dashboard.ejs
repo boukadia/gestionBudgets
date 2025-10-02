@@ -31,6 +31,7 @@
                         <a class="nav-link active" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i> dashboard</a>
                         <a class="nav-link" href="#profile"><i class="fas fa-user me-2"></i>Profile</a>
                         <a class="nav-link" href="/transactions"><i class="fas fa-exchange-alt me-2"></i>Transactions</a>
+                        <a class="nav-link" href="/categories"><i class="fas fa-chart-pie me-2"></i>Categories</a>
                         <a class="nav-link" href="/budgets"><i class="fas fa-chart-pie me-2"></i>Budgets</a>
                         <a class="nav-link" href="#objectives"><i class="fas fa-bullseye me-2"></i> Goals</a>
                         <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>getOut </a>
@@ -176,7 +177,7 @@
                     <h5 class="modal-title">Ajouter une Transaction</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST" action="/transactions">
+                <form method="POST" action="/transactions/create">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Montant</label>

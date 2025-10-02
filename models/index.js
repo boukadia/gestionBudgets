@@ -3,7 +3,7 @@ const User = require("./User");
 const Transaction = require("./Transaction");
 const Budget = require("./Budget");
 const SavingGoal = require("./SavingGoal");
-const Category=require('./category')
+const Category=require('./Category')
 
 Category.hasMany(Transaction, { foreignKey: 'categoryId' });
 Transaction.belongsTo(Category, { foreignKey: 'categoryId' });
