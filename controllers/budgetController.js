@@ -2,14 +2,31 @@ const {Budget}=require('../models')
 const {Category}=require('../models')
 
 exports.getBudget=async(req,res)=>{
-    await Budget.findAll().then((budgets)=>{
-        res.render('budgets',{budgets})
+    const userId = req.session.userId;
+   
+    await Budget.findAll({where:{userId}, include:[Category]}).then((budgets)=>{
+        res.render('budgets', {budgets})
     })
+
+//     const budgets=await Budget.findAll({
+//     include:[Category]
+//   });
+  
+
+    // await Budget.findAll().then((budgets)=>{
+    //     res.send(budgets)
+    // })
+    // await Budget.findAll({include:[Category]}).then((budgets)=>{
+    //     res.render('budgets',{budgets})
+    // })
    
     
 }
 exports.createBudget=async(req,res)=>{
-    await Budget.create(req.body).then(()=>{
+    const userId = req.session.userId;
+
+    const {categoryId,limit, month, year}=req.body
+    await Budget.create({categoryId,userId,limit, month, year}).then(()=>{
         res.redirect('/budgets')
     })
 }

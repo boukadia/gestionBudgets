@@ -15,6 +15,10 @@ const User = sequelize.define("User", {
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    solde:{
+        type: DataTypes.FLOAT,
+        defaultValue:0
     }
 }, {
     tableName: "users",

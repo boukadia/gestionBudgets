@@ -11,6 +11,9 @@ Transaction.belongsTo(Category, { foreignKey: 'categoryId' });
 User.hasMany(Transaction, { foreignKey: 'userId' });
 Transaction.belongsTo(User, { foreignKey: 'userId' });
 
+Budget.belongsTo(Category, { foreignKey: 'categoryId' });
+Category.hasMany(Budget, { foreignKey: 'categoryId' });
+
 User.hasMany(Budget, { foreignKey: 'userId' });
 Budget.belongsTo(User, { foreignKey: 'userId' });
 

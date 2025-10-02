@@ -26,6 +26,7 @@ exports.createTransaction= async(req,res)=>{
     
 
   try {
+    // const solde=
  const userId=req.session.userId;
   const {montant,date,description,categoryId,type}=req.body;
     await Transaction.create(

@@ -53,7 +53,7 @@
                                 <form method="POST" action="/budgets/create">
                                     <div class="mb-3">
                                         <label for="category" class="form-label">Catégorie</label>
-                                        <select name="category" id="category" class="form-select" required>
+                                        <select name="categoryId" id="category" class="form-select" required>
                                             <option value="">Choisir une catégorie</option>
                                             <% categories.forEach(category => { %>
                                             <option value="<%= category.id %>"><%= category.name%></option>

@@ -1,11 +1,18 @@
 const{DataTypes}=require('sequelize');
 const sequelize=require('../config/database');
 const User=require('./User');
+const Category = require('./Category');
 const Budget=sequelize.define("Budget",{
-     category: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
+  //    CategoryId:{
+      
+  //   type: DataTypes.INTEGER,
+  //   references: {
+  //     model: 'categories',
+  //     key: 'id'
+  //   },
+  //   allowNull: false
+  // }
+    //  ,
   limit: {
     type: DataTypes.FLOAT,
     allowNull: false
@@ -23,7 +30,9 @@ const Budget=sequelize.define("Budget",{
   timestamps: true
 });
 
-Budget.belongsTo(User, { foreignKey: "userId" });
-User.hasMany(Budget, { foreignKey: "userId" });
+// Budget.belongsTo(User, { foreignKey: "userId" });
+// User.hasMany(Budget, { foreignKey: "userId" });
+// Budget.belongsTo(Category, { foreignKey: "categoryId" });
+// Category.hasMany(Budget, { foreignKey: "categoryId" });
 
 module.exports = Budget;

@@ -27,12 +27,13 @@
                 <div class="p-4">
                     <h4 class="text-white mb-4"><i class="fas fa-wallet me-2"></i>Gestion des budgets</h4>
                     <nav class="nav flex-column">
-                        <a class="nav-link" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                        <a class="nav-link active" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i> dashboard</a>
                         <a class="nav-link" href="#profile"><i class="fas fa-user me-2"></i>Profile</a>
                         <a class="nav-link" href="/transactions"><i class="fas fa-exchange-alt me-2"></i>Transactions</a>
-                        <a class="nav-link active" href="/budgets"><i class="fas fa-chart-pie me-2"></i>Budgets</a>
-                        <a class="nav-link" href="#objectives"><i class="fas fa-bullseye me-2"></i>Goals</a>
-                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a>
+                        <a class="nav-link" href="/categories"><i class="fas fa-chart-pie me-2"></i>Categories</a>
+                        <a class="nav-link" href="/budgets"><i class="fas fa-chart-pie me-2"></i>Budgets</a>
+                        <a class="nav-link" href="#objectives"><i class="fas fa-bullseye me-2"></i> Goals</a>
+                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>LogOut </a>
                     </nav>
                 </div>
             </div>
@@ -63,7 +64,9 @@
                             <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card budget-card">
                                     <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0"><%= budget.category.name %></h5>
+                                        <h5 class="mb-0"><%= budget.Category.name %></h5>
+                                        
+                                        <!-- <h5 class="mb-0"><%= budget.Category.name %></h5> -->
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-v"></i>
