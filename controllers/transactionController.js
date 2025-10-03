@@ -32,7 +32,13 @@ exports.createTransaction= async(req,res)=>{
   if (!userId) {
       return res.status(401).send('Unauthorized');
     }
-    if (req.body.type==='revenu' ){ 
+  
+    if (category.name==="salaire" && req.body.type==="revenu" ) {
+      await User.update({salaire:req.body.montant},{where:{id:userId}})
+       await User.increment({ solde: req.body.montant }, { where: { id: userId } });
+      
+    }
+    else if (req.body.type==='revenu' ){ 
       await User.increment({ solde: req.body.montant }, { where: { id: userId } });
     }
     else  {  
@@ -76,7 +82,7 @@ exports.updateTransaction=async(req,res)=>{
     const transactionId = req.params.id;
     const transaction =await Transaction.findOne({where:{id:req.params.id}})
     const user=await User.findOne({where:{id:req.session.userId}})
-    if (transaction.type==="depense") {
+    if (transaction.type==="depense"|| transaction.type==="saving") {
       user.update({solde:user.solde+transaction.montant}) //travail avec const user
 
       await Transaction.update(req.body,{where:{id:transactionId}
@@ -106,7 +112,7 @@ exports.deleteTransaction=async(req,res)=>{
     let solde=user.solde;
     const transactionId = req.params.id;
     const transaction =await Transaction.findOne({where:{id:req.params.id}})
-if (transaction.type==="depense") {
+if (transaction.type==="depense"|| transaction.type==="saving") {
     await User.increment({solde:transaction.montant},{where:{id:req.session.userId}}) //travail avec le model direct (solde/usserId)
     await Transaction.destroy({where:{id:transactionId}
     })

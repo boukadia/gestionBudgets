@@ -10,13 +10,16 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        unique: true
     },
     password: {
         type: DataTypes.STRING,
         allowNull: false
     },
     solde:{
+        type: DataTypes.FLOAT,
+        defaultValue:0
+    },
+    salaire:{
         type: DataTypes.FLOAT,
         defaultValue:0
     }

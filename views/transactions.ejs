@@ -118,16 +118,27 @@
                       </td>
                       <td>
                         <span
-                          class="badge <%= transaction.type === 'revenu' ? 'bg-success' : 'bg-danger' %>"
+                          class="badge <%= 
+                            transaction.type === 'revenu' ? 'bg-success' : 
+                            transaction.type === 'saving' ? 'bg-info' : 'bg-danger' 
+                          %>"
                         >
-                          <%= transaction.type === 'revenu' ? 'Revenu' :
-                          'Dépense' %>
+                          <%= 
+                            transaction.type === 'revenu' ? 'Revenu' :
+                            transaction.type === 'saving' ? 'Épargne' : 'Dépense' 
+                          %>
                         </span>
                       </td>
                       <td
-                        class="<%= transaction.type === 'revenu' ? 'text-success' : 'text-danger' %>"
+                        class="<%= 
+                          transaction.type === 'revenu' ? 'text-success' : 
+                          transaction.type === 'saving' ? 'text-info' : 'text-danger' 
+                        %>"
                       >
-                        <%= transaction.type === 'revenu' ? '+' : '-' %><%=
+                        <%= 
+                          transaction.type === 'revenu' ? '+' : 
+                          transaction.type === 'saving' ? '~' : '-' 
+                        %><%=
                         transaction.montant %> MAD
                       </td>
                       <td>
@@ -213,6 +224,7 @@
                   <option value="">Choisir</option>
                   <option value="depense">Dépense</option>
                   <option value="revenu">Revenu</option>
+                  <option value="saving">Saving</option>
                 </select>
               </div>
               <div class="mb-3">

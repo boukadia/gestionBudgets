@@ -4,6 +4,7 @@ const {   Transaction } = require("../models");
 const { Category } = require("../models");  
 // const express = require('express');
 const bcrypt = require("bcrypt"); 
+const { where } = require("sequelize");
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
@@ -81,8 +82,22 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.dashboard = async (req, res) => {
-  const categories = await Category.findAll();
-  const transactions = await Transaction.findAll({order: [['createdAt', 'DESC']],include:[Category]});
+ try {
+   const categories = await Category.findAll();
+  const user=await User.findOne({where :{ id:req.session.userId}})
+  const derniersTransactions = await Transaction.findAll({order: [['createdAt', 'DESC']],limit:5,where:{userId:user.id},include:[Category]});
+  const transactions = await Transaction.findAll({order: [['createdAt', 'DESC']],where:{userId:user.id},include:[Category]});
+  const sumDepense = await Transaction.sum('montant', { where: { userId: user.id ,type:"depense"} });
+  const sumRevenu=await Transaction.sum('montant',{where:{userId:req.session.userId,type:'revenu'}})
+  // const eparigne=
+  
+  // console.log(transactions.forEach(Transaction => {
+  //   console.log(Transaction.Category.name);
+  //   i++
+    
+  // }))
+  // console.log(i);
+  
   
   if (!req.session.userId) {
     res.redirect("/users/login");
@@ -92,12 +107,24 @@ exports.dashboard = async (req, res) => {
       res.render("dashboard", {
     user: {
       name: req.session.userName,
-      email: req.session.userEmail
+      email: req.session.userEmail,
+      solde:user.solde
     },
     categories: categories,
-    transactions: transactions
+    transactions: transactions,
+    derniersTransactions:derniersTransactions,
+    sumDepense:sumDepense,
+    sumRevenu:sumRevenu
+
   });
   }
+ } catch (error) {
+ console.error("Error logging in user:", error);
+    res.status(500).send("Error logging in user: " + error.message);
+  
+
+ }
+ 
   
 
 }
