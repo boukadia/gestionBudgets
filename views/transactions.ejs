@@ -57,13 +57,13 @@
               <i class="fas fa-wallet me-2"></i>Gestion Budget
             </h4>
             <nav class="nav flex-column">
-              <a class="nav-link active" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i> dashboard</a>
+              <a class="nav-link" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
                         <a class="nav-link" href="#profile"><i class="fas fa-user me-2"></i>Profile</a>
                         <a class="nav-link" href="/transactions"><i class="fas fa-exchange-alt me-2"></i>Transactions</a>
-                        <a class="nav-link" href="/categories"><i class="fas fa-chart-pie me-2"></i>Categories</a>
+                        <a class="nav-link" href="/categories"><i class="fas fa-tags me-2"></i>Catégories</a>
                         <a class="nav-link" href="/budgets"><i class="fas fa-chart-pie me-2"></i>Budgets</a>
-                        <a class="nav-link" href="#objectives"><i class="fas fa-bullseye me-2"></i> Goals</a>
-                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>LogOut </a>
+                        <a class="nav-link " href="/saving-goals"><i class="fas fa-bullseye me-2"></i>Objectifs</a>
+                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a>
             </nav>
           </div>
         </div>
@@ -118,27 +118,18 @@
                       </td>
                       <td>
                         <span
-                          class="badge <%= 
-                            transaction.type === 'revenu' ? 'bg-success' : 
-                            transaction.type === 'saving' ? 'bg-info' : 'bg-danger' 
-                          %>"
+                          class="badge <%= transaction.type === 'revenu' ? 'bg-success' : transaction.type === 'saving' ? 'bg-info' : 'bg-danger' %>"
                         >
-                          <%= 
-                            transaction.type === 'revenu' ? 'Revenu' :
-                            transaction.type === 'saving' ? 'Épargne' : 'Dépense' 
+                          <%= transaction.type === 'revenu' ? 'Revenu' :
+                          transaction.type === 'saving' ? 'Épargne' : 'Dépense'
                           %>
                         </span>
                       </td>
                       <td
-                        class="<%= 
-                          transaction.type === 'revenu' ? 'text-success' : 
-                          transaction.type === 'saving' ? 'text-info' : 'text-danger' 
-                        %>"
+                        class="<%= transaction.type === 'revenu' ? 'text-success' : transaction.type === 'saving' ? 'text-info' : 'text-danger' %>"
                       >
-                        <%= 
-                          transaction.type === 'revenu' ? '+' : 
-                          transaction.type === 'saving' ? '~' : '-' 
-                        %><%=
+                        <%= transaction.type === 'revenu' ? '+' :
+                        transaction.type === 'saving' ? '~' : '-' %><%=
                         transaction.montant %> MAD
                       </td>
                       <td>
@@ -213,6 +204,7 @@
                 <input
                   type="number"
                   name="montant"
+                  min="1"
                   class="form-control"
                   step="0.01"
                   required
@@ -220,12 +212,16 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">Type</label>
-                <select name="type" class="form-select" required>
+                <select name="type" id="type" class="form-select" required>
                   <option value="">Choisir</option>
                   <option value="depense">Dépense</option>
                   <option value="revenu">Revenu</option>
                   <option value="saving">Saving</option>
                 </select>
+              </div>
+              <div class="mb-3" id="titre" style="display: none">
+                <label class="form-label">Titre</label>
+                <input type="text" name="titre" class="form-control" />
               </div>
               <div class="mb-3">
                 <label class="form-label">Catégorie</label>
@@ -264,6 +260,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============================SavingTitre===============
+        let titre = document.getElementById("titre");
+        let type = document.getElementById("type");
+        type.addEventListener("change", (event) => {
+          if (event.target.value == "saving") {
+            titre.style.display = "block";
+            titre.childNodes[3].setAttribute("required", "required");
+          } else {
+            titre.style.display = "none";
+            titre.childNodes[3].removeAttribute("required");
+          }
+        });
+        
       document.addEventListener("DOMContentLoaded", () => {
         const editForms = document.querySelectorAll(
           'form[action^="/transactions/edit"]'
@@ -304,21 +313,55 @@
     <script>
       // Récupérer les paramètres de l'URL
       const urlParams = new URLSearchParams(window.location.search);
-      const error = urlParams.get('error');
-      const solde = urlParams.get('solde');
-      
-      
+      const error = urlParams.get("error");
+      const solde = urlParams.get("solde");
+const targetAmount=urlParams.get("currentAmount");
       // Afficher l'alerte si les paramètres sont présents
-      if (error === 'solde_insuffisant' && solde) {
+      if (error === "solde_insuffisant" && solde) {
         Swal.fire({
-          icon: 'error',
-          title: 'Solde insuffisant!',
-          text: `Votre solde actuel est de ${parseFloat(solde).toLocaleString()} MAD`,
-          confirmButtonColor: '#667eea'
+          icon: "error",
+          title: "Solde insuffisant!",
+          text: `Votre solde actuel est de ${parseFloat(
+            solde
+          ).toLocaleString()} MAD`,
+          confirmButtonColor: "#667eea",
         });
-        
+
         // Nettoyer l'URL sans recharger la page
         window.history.replaceState({}, document.title, "/transactions");
+
+      
+      }
+
+      if (error === "completed") {
+        Swal.fire({
+          icon: "error",
+          title: "completed!",
+          text: `Voous avez atteindre l'objectif ${parseFloat(
+            targetAmount
+          ).toLocaleString()} MAD`,
+          confirmButtonColor: "#667eea",
+        });
+
+        // Nettoyer l'URL sans recharger la page
+        window.history.replaceState({}, document.title, "/transactions");
+
+      
+      }
+      if (error === "vous avez depassez l'objecif") {
+        Swal.fire({
+          icon: "error",
+          title: "depasser l'obj!",
+          text: `vous avez depassez l'objecif ${parseFloat(
+            targetAmount
+          ).toLocaleString()} MAD`,
+          confirmButtonColor: "#667eea",
+        });
+
+        // Nettoyer l'URL sans recharger la page
+        window.history.replaceState({}, document.title, "/transactions");
+
+      
       }
     </script>
   </body>

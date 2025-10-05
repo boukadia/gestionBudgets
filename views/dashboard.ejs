@@ -28,13 +28,13 @@
                 <div class="p-4">
                     <h4 class="text-white mb-4"><i class="fas fa-wallet me-2"></i>Gestion des budgets</h4>
                     <nav class="nav flex-column">
-                        <a class="nav-link active" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i> dashboard</a>
-                        <a class="nav-link" href="#profile"><i class="fas fa-user me-2"></i>Profile</a>
+                        <a class="nav-link active" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                        <a class="nav-link" href="/users/profile"><i class="fas fa-user me-2"></i>Profile</a>
                         <a class="nav-link" href="/transactions"><i class="fas fa-exchange-alt me-2"></i>Transactions</a>
-                        <a class="nav-link" href="/categories"><i class="fas fa-chart-pie me-2"></i>Categories</a>
+                        <a class="nav-link" href="/categories"><i class="fas fa-tags me-2"></i>Catégories</a>
                         <a class="nav-link" href="/budgets"><i class="fas fa-chart-pie me-2"></i>Budgets</a>
-                        <a class="nav-link" href="#objectives"><i class="fas fa-bullseye me-2"></i> Goals</a>
-                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>LogOut </a>
+                        <a class="nav-link " href="/saving-goals"><i class="fas fa-bullseye me-2"></i>Objectifs</a>
+                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a>
                     </nav>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                                 <div class="card-body">
                                     <i class="fas fa-arrow-up fa-2x text-success mb-2"></i>
                                     <h5>les revenus mensuels </h5>
-                                    <h3 class="text-success">8,200 MAD</h3>
+                                    <h3 class="text-success"><%=sumRevenu%> MAD</h3>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                 <div class="card-body">
                                     <i class="fas fa-arrow-down fa-2x text-danger mb-2"></i>
                                     <h5>les dépenses mensuelles </h5>
-                                    <h3 class="text-danger">5,800 MAD</h3>
+                                    <h3 class="text-danger"><%=sumDepense%> MAD</h3>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                                 <div class="card-body">
                                     <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
                                     <h5> l’épargne mensuelle</h5>
-                                    <h3 class="text-info">2,400 MAD</h3>
+                                    <h3 class="text-info"><%=currentAmount%> MAD</h3>
                                 </div>
                             </div>
                         </div>
@@ -99,34 +99,16 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
+                               <% categories.forEach(category => { %>
                                 <div class="col-md-4 mb-3">
-                                    <h6>food</h6>
+                                    <h6> <%= category.name %> : <%= categoryTotals[category.id] %></h6>
                                     <div class="progress mb-2">
                                         <div class="progress-bar bg-success" style="width: 65%"></div>
                                     </div>
                                     <small>1,300 / 2,000 MAD</small>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <h6>transport</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-warning" style="width: 85%"></div>
-                                    </div>
-                                    <small>680 / 800 MAD</small>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <h6>housing</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-info" style="width: 45%"></div>
-                                    </div>
-                                    <small>1,350 / 3,000 MAD</small>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <h6>housing</h6>
-                                    <div class="progress mb-2">
-                                        <div class="progress-bar bg-info" style="width: 45%"></div>
-                                    </div>
-                                    <small>1,350 / 3,000 MAD</small>
-                                </div>
+                                <%})%>
+                               
                             </div>
                         </div>
                     </div>
@@ -181,7 +163,8 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Montant</label>
-                            <input type="number" name="montant" class="form-control" step="0.01" required>
+                 
+                            <input type="number"  min="1" name="montant" class="form-control" step="0.01" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Type</label>
@@ -193,7 +176,7 @@
 
                             </select>
                         </div>
-                         <div class="mb-3" id="titreSaving" style="display:none">
+                         <div class="mb-3" id="titre" style="display:none">
                             <label class="form-label">Titre</label>
                             <input type="text" name="titre" class="form-control" >
                         </div>
@@ -227,16 +210,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
    
 <script>
-    let titreSaving =document.getElementById('titreSaving');
+    let titre =document.getElementById('titre');
     let type=document.getElementById('type');
     type.addEventListener("change",(event)=>{
       if (event.target.value=="saving") {
-        titreSaving.style.display="block"
-        titreSaving.childNodes[3].setAttribute("required", "required");
+        titre.style.display="block"
+        titre.childNodes[3].setAttribute("required", "required");
        
       } else {
-        titreSaving.style.display="none";
-         titreSaving.childNodes[3].removeAttribute("required")
+        titre.style.display="none";
+         titre.childNodes[3].removeAttribute("required")
       }
        
         

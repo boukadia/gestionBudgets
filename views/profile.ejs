@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Gestion Budget</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .sidebar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .sidebar .nav-link { color: white; padding: 15px 20px; border-radius: 10px; margin: 5px 0; }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { background: rgba(255,255,255,0.2); color: white; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card-header { background: linear-gradient(45deg, #667eea, #764ba2); color: white; border-radius: 15px 15px 0 0 !important; }
+        .btn-primary { background: linear-gradient(45deg, #667eea, #764ba2); border: none; }
+        .profile-header { background: linear-gradient(45deg, #667eea, #764ba2); padding: 30px; color: white; border-radius: 15px; margin-bottom: 30px; }
+        .profile-stats { padding: 20px; background: white; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .avatar-container { position: relative; }
+        .avatar { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid white; }
+        .edit-avatar { position: absolute; bottom: 10px; right: 10px; background: white; color: #764ba2; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="p-4">
+                    <h4 class="text-white mb-4"><i class="fas fa-wallet me-2"></i>Gestion Budget</h4>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="/users/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                        <a class="nav-link active" href="/users/profile"><i class="fas fa-user me-2"></i>Profile</a>
+                        <a class="nav-link" href="/transactions"><i class="fas fa-exchange-alt me-2"></i>Transactions</a>
+                        <a class="nav-link" href="/categories"><i class="fas fa-tags me-2"></i>Catégories</a>
+                        <a class="nav-link" href="/budgets"><i class="fas fa-chart-pie me-2"></i>Budgets</a>
+                        <a class="nav-link" href="/saving-goals"><i class="fas fa-bullseye me-2"></i>Objectifs</a>
+                        <a class="nav-link" href="/users/logout"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <!-- Profile Header -->
+                <div class="profile-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-container me-4">
+                            <img src="https://via.placeholder.com/150" alt="Profile Avatar" class="avatar">
+                            <a href="#" class="edit-avatar" data-bs-toggle="modal" data-bs-target="#editAvatarModal">
+                                <i class="fas fa-camera"></i>
+                            </a>
+                        </div>
+                        <div>
+                            <h2><%= user.name %></h2>
+                            <p class="mb-0"><i class="fas fa-envelope me-2"></i><%= user.email %></p>
+                            <p class="mb-0"><i class="fas fa-wallet me-2"></i>Solde: <%= user.solde %> €</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fas fa-edit me-2"></i>Modifier profil
+                    </button>
+                </div>
+
+                <div class="row">
+                    <!-- User Statistics -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5><i class="fas fa-chart-line me-2"></i>Statistiques</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="profile-stats mb-3">
+                                            <h6 class="text-muted">Total Dépenses</h6>
+                                            <h4 class="text-danger"><%= sumDepense || 0 %> €</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="profile-stats mb-3">
+                                            <h6 class="text-muted">Total Revenus</h6>
+                                            <h4 class="text-success"><%= sumRevenu || 0 %> €</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-stats mb-3">
+                                    <h6 class="text-muted">Nombre de transactions</h6>
+                                    <h4><%= transactionsCount %></h4>
+                                </div>
+                                <div class="profile-stats">
+                                    <h6 class="text-muted">Objectifs d'épargne</h6>
+                                    <h4><%= savingGoalsCount %></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Security -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5><i class="fas fa-lock me-2"></i>Sécurité du compte</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <h6>Mot de passe</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="text-muted">••••••••••</p>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Changer</button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="mb-3">
+                                    <h6>Email</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="text-muted"><%= user.email %></p>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#changeEmailModal">Changer</button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div>
+                                    <h6>Dernière connexion</h6>
+                                    <p class="text-muted">Aujourd'hui</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions -->
+                    <div class="col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-history me-2"></i>Transactions récentes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Catégorie</th>
+                                                <th>Description</th>
+                                                <th>Montant</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (derniersTransactions && derniersTransactions.length > 0) { %>
+                                                <% derniersTransactions.forEach(transaction => { %>
+                                                    <tr>
+                                                        <td><%= new Date(transaction.date).toLocaleDateString() %></td>
+                                                        <td><%= transaction.Category ? transaction.Category.name : 'N/A' %></td>
+                                                        <td><%= transaction.description %></td>
+                                                        <td><%= transaction.montant %> €</td>
+                                                        <td>
+                                                            <span class="badge <%= transaction.type === 'depense' ? 'bg-danger' : 'bg-success' %>">
+                                                                <%= transaction.type %>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="5" class="text-center">Aucune transaction récente</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifier le profil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/users/profile/update" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Changer le mot de passe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/users/password/update" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Mot de passe actuel</label>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmer le nouveau mot de passe</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Email Modal -->
+    <div class="modal fade" id="changeEmailModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Changer l'email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/users/email/update" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="currentEmail" class="form-label">Email actuel</label>
+                            <input type="email" class="form-control" id="currentEmail" value="<%= user.email %>" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newEmail" class="form-label">Nouvel email</label>
+                            <input type="email" class="form-control" id="newEmail" name="newEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe (pour confirmer)</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Changer l'email</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Avatar Modal -->
+    <div class="modal fade" id="editAvatarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Changer la photo de profil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/users/avatar/update" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Sélectionner une nouvelle photo</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
